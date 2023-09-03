@@ -24,10 +24,43 @@ export class CadastroComponent {
     //   senha: ['', Validators.required],
   });
 
+  associaChefeForm = this.formBuilder.group({
+    chefe: '',
+    subordinado: ''
+  });
+
+  colaboradorList: any[] = [];
+
+  ngOnInit() {
+    this.carregaColaboradorList();
+  }
+
+  carregaColaboradorList() {
+    this.apiService.listAllUsers().subscribe((data: any[]) => {
+      this.colaboradorList = data;
+      console.log(this.colaboradorList);
+    });
+  }
+
   salvar() {
-    console.log(this.cadastroForm)
-    console.log(this.cadastroForm.value.nome)
-    console.log(this.cadastroForm.value.senha)
-    this.apiService.addPost(this.cadastroForm.value.nome, this.cadastroForm.value.senha).subscribe((data: any[]) => console.log(data));
+    this.apiService.salvarUsuario(this.cadastroForm.value.nome, this.cadastroForm.value.senha)
+    .subscribe((data: any[]) => {
+      this.carregaColaboradorList();
+      this.cadastroForm.get('nome')?.setValue('');
+      this.cadastroForm.get('senha')?.setValue('');
+    });
+  }
+
+  listarTodos() {
+    this.apiService.listAllUsers().subscribe((data: any[]) => console.log(data));
+  }
+
+  associaChefeSalvar() {
+    this.apiService.salvarAssociaChefeSubordinado(this.associaChefeForm.value.chefe, this.associaChefeForm.value.subordinado)
+    .subscribe((data: any[]) => {
+      this.carregaColaboradorList();
+      this.associaChefeForm.get('chefe')?.setValue('');
+      this.associaChefeForm.get('subordinado')?.setValue('');
+    });
   }
 }
