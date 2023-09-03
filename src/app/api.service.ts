@@ -11,20 +11,28 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/posts`);
+  listAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/colaborador`);
   }
 
   getPostById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/posts/${id}`);
   }
 
-  addPost(nome: any, senha: any): Observable<any> {
+  salvarUsuario(nome: any, senha: any): Observable<any> {
     var body = {"nome": nome, "senha": senha}
 
     console.log(body)
 
     return this.http.post(`${this.apiUrl}/colaborador`, body);
+  }
+
+  salvarAssociaChefeSubordinado(chefe: any, subordinado: any): Observable<any> {
+    var body = {"idChefe": chefe, "idSubordinado": subordinado}
+
+    console.log(body)
+
+    return this.http.post(`${this.apiUrl}/colaborador/associa-chefe`, body);
   }
 
   updatePost(id: number, post: any): Observable<any> {
